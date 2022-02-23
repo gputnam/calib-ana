@@ -5,8 +5,14 @@ import pandas as pd
 from tqdm.auto import tqdm
 from multiprocessing import Pool
 import multiprocessing
+import os
 from . import names
 import dill
+
+CPU_COUNT = multiprocessing.cpu_count()
+
+if CPU_COUNT == 0:
+    CPU_COUNT = os.cpu_count()
 
 class NTupleProc(object):
     def __init__(self, f=None, name="None"):
@@ -174,7 +180,7 @@ class NTupleGlob(object):
             thisglob = thisglob[:maxfile]
 
         if nproc == "auto":
-            nproc = min(multiprocessing.cpu_count(), len(thisglob))
+            nproc = min(CPU_COUNT, len(thisglob))
 
         ret = []
         with Pool(processes=nproc) as pool:
@@ -198,7 +204,7 @@ class NTupleGlob(object):
 
     def histogram(self, var, bins, when=NTupleProc(), flatten_runs=False, flatten_cryo=False, maxfile=None, nproc=1):
         if nproc == "auto":
-            nproc = multiprocessing.cpu_count()
+            nproc = CPU_COUNT
 
         if not isinstance(var, list):
             var = [var]

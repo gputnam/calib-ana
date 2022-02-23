@@ -1,3 +1,6 @@
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 import sys
 import datetime as dt
 from lib.ntuple_glob import NTupleGlob
@@ -11,10 +14,14 @@ from lib.constants import *
 NCHUNK = 10
 PLANE = 2
 SPNAME = "p"
+SAVEMC = False
 
 plane2branches = [
-    "h.%s.x" % SPNAME, "h.%s.y" % SPNAME, "h.%s.z" % SPNAME, "h.time", "h.tpc", "h.wire", "h.channel", "h.integral", "pitch", "h.sumadc", "i_snippet", "h.width"
+    "h.%s.x" % SPNAME, "h.%s.y" % SPNAME, "h.%s.z" % SPNAME, "h.time", "h.tpc", "h.wire", "h.integral", "pitch", "h.sumadc", "i_snippet", "h.width"
 ]
+if SAVEMC:
+    plane2branches.append("h.channel")
+
 plane2branches = ["hits%i.%s" % (PLANE, s) for s in plane2branches]
 
 truehitbranches = [
@@ -49,6 +56,7 @@ def reduce_df(df, truedf=None):
     else:
         df["true_nelec"] = -1.
         df["true_e"] = -1.
+        df["true_pitch"] = -1.
 
     hitsname = "hits%i" % PLANE
 
@@ -97,7 +105,11 @@ def reduce_df(df, truedf=None):
 
 
 def main(output, inputs):
-    ntuples = NTupleGlob(inputs, branches.trkbranches + plane2branches + truehitbranches)
+    b = branches.trkbranches + plane2branches
+    if SAVEMC:
+        b += truehitbranches
+
+    ntuples = NTupleGlob(inputs, b)
     df = ntuples.dataframe(nproc="auto", f=reduce_df)
     df.to_hdf(output, key="df", mode="w")
 
