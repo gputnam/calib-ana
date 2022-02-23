@@ -53,21 +53,21 @@ def reduce_df(df, truedf=None):
     hitsname = "hits%i" % PLANE
 
     outdf = df.groupby(["entry", "chunk"])[[(hitsname, 'h', 'integral', ''),
-                                            ('h', 'sumadc', '', ''),
-                                            ('pitch', '', '', ''),
+                                            (hitsname, 'h', 'sumadc', '', ),
+                                            (hitsname, 'pitch', '', ''),
                                             ('true_nelec', '', '', ''),
                                             ('true_e', '', '', ''),
+                                            ('true_pitch', '', '', ''),
                                           ]].sum()
 
     outdf = outdf.join(df.groupby(["entry", "chunk"])[[(hitsname, 'h', SPNAME, 'x'),
                                                       (hitsname, 'h', SPNAME, 'y'),
                                                       (hitsname, 'h', SPNAME, 'z'),
-                                                      (hitsname, 'pitch', '', ''),
                                                       (hitsname, 'h', 'time', ''),
                                                       (hitsname, 'h', 'width', ''),
                                                      ]].mean())
     
-    outdf.columns = ["charge", "sumadc", 'pitch', 'true_nelec', 'true_e', "x", "y", "z", "pitch", "time", "width"]
+    outdf.columns = ["charge", "sumadc", 'pitch', 'true_nelec', 'true_e', "true_pitch", "x", "y", "z", "time", "width"]
 
     # dt along chunk
     if NCHUNK > 1:
@@ -91,7 +91,7 @@ def reduce_df(df, truedf=None):
     outdf["run"] = df.groupby(["entry", "chunk"])[[('meta', 'run', '', ''),]].first()
 
     # Only save chunks that are all in one TPC
-    outdf = outdf[outdf.tpcE | outdf.tpcW].drop(columns=["tpcW"])
+    outdf = outdf[outdf.tpcE | outdf.tpcW]
    
     return outdf
 

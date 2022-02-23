@@ -10,3 +10,4 @@ nbstripout
 tqdm
 ipywidgets
 dill
+tables
