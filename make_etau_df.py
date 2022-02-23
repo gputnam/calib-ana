@@ -11,6 +11,7 @@ import pandas as pd
 # load constants
 from lib.constants import *
 
+# Script parameters
 NCHUNK = 10
 PLANE = 2
 SPNAME = "p"
@@ -33,6 +34,9 @@ def isTPCE(df):
     return df.tpc <= 1
 
 def reduce_df(df, truedf=None):
+    if len(df) == 0: # Ignore empty df's 
+        return None
+
     # Select anode + cathode crossing tracks
     select_track = df.selected == 1
 
@@ -78,14 +82,14 @@ def reduce_df(df, truedf=None):
     outdf.columns = ["charge", "sumadc", 'pitch', 'true_nelec', 'true_e', "true_pitch", "x", "y", "z", "time", "width"]
 
     # dt along chunk
-    if NCHUNK > 1:
-        dt = df.groupby(["entry", "chunk"])[[(hitsname, "h", "time", "")]].diff()
-        dt.columns = ["dt"]
-        dt = dt.join(df.chunk)
-        dt = dt.groupby(["entry", "chunk"]).dt.mean()
-        outdf = outdf.join(dt)
-    else:
-        outdf["dt"] = np.nan
+    # if NCHUNK > 1:
+    #     dt = df.groupby(["entry", "chunk"])[[(hitsname, "h", "time", "")]].diff()
+    #     dt.columns = ["dt"]
+    #     dt = dt.join(df.chunk)
+    #     dt = dt.groupby(["entry", "chunk"]).dt.mean()
+    #     outdf = outdf.join(dt)
+    # else:
+    #     outdf["dt"] = np.nan
     
     # TPC/Cryo info
     outdf["tpcE"] = df.groupby(["entry", "chunk"]).tpcE.all()
