@@ -19,7 +19,7 @@ where each input.root file is ca Calibration N-Tuple.
 One may also give the second argument as a file which containts a list
 of ROOT files. Then, that file must end in .list.
 
-Run the jupyter notebook DriftDirNormalization.ipynb to get the electron lifetime.
+Run the jupyter notebook ELifetime.ipynb to get the electron lifetime.
 NOTE: always run nbstripout before commiting updates to notebooks:
 
 `nbstripout *.ipynb`
