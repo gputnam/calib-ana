@@ -1,0 +1,13 @@
+setuptools>=42
+jupyterlab
+numpy
+uproot
+matplotlib
+scipy
+pandas
+nbstripout
+tqdm
+ipywidgets
+dill
+# wheel 
+# xrootd
