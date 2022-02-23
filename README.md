@@ -1,9 +1,12 @@
 First-Time Setup:
 
 Make a virtual environment:
-python3 -m venv env
-pip3 install -r requirements.txt
-pip3 install -r requirelandau.txt
+python -m venv env
+. env/bin/activate
+pip install --upgrade pip
+pip install wheel
+pip install -r requirements.txt
+pip install -r requirelandau.txt
 
 Producing a HDF5 file for analysis
 python make_etau_df.py [output.df] [inputs.root,]

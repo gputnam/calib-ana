@@ -1,4 +1,5 @@
 setuptools>=42
+cffi
 jupyterlab
 numpy
 uproot
@@ -9,5 +10,3 @@ nbstripout
 tqdm
 ipywidgets
 dill
-# wheel 
-# xrootd
